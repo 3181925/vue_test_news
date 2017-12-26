@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="css/hui.css" />
+
+</head>
+
+<body>
+    <header class="hui-header" id="title">
+        <div id="hui-back"></div>
+        <h1>{{title}}</h1>
+    </header>
+    <div class="hui-wrap" id="info" v-html="info"></div>
+    <script type="text/javascript" src="js/vue.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/axios.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="js/hui.js" charset="UTF-8"></script>
+    <script type="text/javascript">
+        var info = new Vue({
+            el: '#info',
+            data: {
+                info: ''
+            }
+        });
+        var title = new Vue({
+            el: '#title',
+            data: {
+                title: '加载中...'
+            }
+        });
+        var gets = GetRequest();
+        console.log(gets);
+        //获取新闻详情数据
+        axios.get('http://hoa.hcoder.net/index.php?user=hcoder&pwd=hcoder&m=info&id=' + gets.id).then(function(response) {
+            console.log(response.data);
+            info.info = response.data.content;
+            title.title = response.data.title;
+        }).catch(function(error) {
+            hui.toast('连接api失败');
+        });
+        //获取url参数函数
+        function GetRequest() {
+            var url = location.search;
+            var theRequest = new Object();
+            if (url.indexOf("?") != -1) {
+                var str = url.substr(1);
+                strs = str.split("&");
+                for (var i = 0; i < strs.length; i++) {
+                    theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+                }
+            }
+            return theRequest;
+        }
+    </script>
+
+</body>
+
+</html>

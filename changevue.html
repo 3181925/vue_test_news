@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    {{myname}}...{{test}}123...<br/> {{age}}...
+    <span>{{test}}</span>
+    <button onclick="t()">test</button>
+</body>
+<script src="js/test_vue.js"></script>
+<script>
+    var app = new hui({
+        el: 'body',
+        data: {
+            myname: 'name',
+            age: '18',
+            test: 'test'
+        }
+    })
+
+    function t() {
+        app.setData({
+            myname: 'name new ',
+            test: 'test new'
+        });
+    }
+</script>
+
+</html>

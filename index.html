@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="css/hui.css" />
+</head>
+
+<body>
+    <header class="hui-header">
+        <div id="hui-back"></div>
+        <h1>hui</h1>
+    </header>
+    <div class="hui-wrap">
+        <div class="hui-center-title" style="margin-top:15px;">
+            <h1>演示样例</h1>
+        </div>
+        <div id="refreshContainer" class="hui-refresh" style="padding:0px 10px;">
+            <div class="hui-refresh-icon"></div>
+            <div class="hui-wrap hui-media-list" id="app">
+                <ul>
+                    <li v-for="item in items" @click="openinfo(item[0])">
+                        <div class="hui-media-list-img"><img :src="item[1]" /></div>
+                        <div class="hui-media-content">{{item[2]}}</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="js/hui.js" charset="utf-8" type="text/javascript"></script>
+    <script src="js/vue.min.js" charset="utf-8" type="text/javascript"></script>
+    <script type="text/javascript" src="js/axios.min.js" charset="UTF-8"></script>
+    <script src="js/hui-refresh-load-more.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var page = 1;
+        var arrNew = new Array();
+        hui.loadMore(getMore);
+        var vue = new Vue({
+            el: '#app',
+            data: {
+                items: new Array()
+            },
+            methods: {
+                openinfo: function(artid) {
+                    location.href = './info.html?id=' + artid;
+                }
+            },
+            //在创建完毕后加载第一页数据
+            created: function() {
+                getMore();
+            }
+        })
+
+
+        function getMore() {
+            axios.get('http://hoa.hcoder.net/index.php?user=hcoder&pwd=hcoder&m=mediaList&page=' + page).then(function(response) {
+
+                console.log(page + '\n' + response.data);
+                if (response.data == null) {
+                    hui.endLoadMore(true);
+                    hui.toast('加载完毕')
+                    return false;
+                }
+                var arr = response.data.split('--hcSplitor--');
+                for (var i = 0; i < arr.length; i++) {
+                    arrNew.push(arr[i].split('--hcListSplitor--'));
+
+
+                }
+                vue.items = arrNew;
+                page++;
+                hui.endLoadMore();
+            }).catch(function(error) {
+                hui.toast('连接api失败')
+            })
+
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>defineProperty</title>
+</head>
+
+<body>
+    <div> vue 改变视图原理 defineProperty 请f12打开控制台 查看log</div>
+    <script>
+        var obj = {
+
+        }
+        Object.defineProperty(obj, "test", {
+            configurable: false, //是否能被删除.是否能重新修改特性
+            enumerable: true, //是否可以被枚举
+            value: '222', //默认值
+            writable: true //是否可以被重写
+        });
+        //obj.test = "change value"
+        // for (var i in obj) {
+        //     console.log(i)
+        // }
+        delete obj.test
+        console.log(obj.test)
+            // Object.defineProperty(obj, 'test', {
+            //     configurable: true | false,
+            //     enumerable: true | false,
+            //     value: '333',
+            //     writable: false
+            // })
+            // console.log(obj.test)
+            // Object.defineProperty(obj,"newKey",{
+            //     get:function(){}|undefined,
+            //     set:function(value){}|undefined,
+
+        // })
+        var objs = {};
+        var initValue = 'hello';
+        Object.defineProperty(objs, "newkey", {
+                get: function() {
+                    //当获取值时触发的函数
+                    return initValue
+                },
+                set: function(value) {
+                    //当设置值时触发的函数，设置的新值通过参数vlaue拿到
+                    initValue = value
+                }
+            })
+            //获取值
+        console.log(objs.newkey);
+        //设置值
+        objs.newkey = 'change value';
+        console.log(objs.newkey)
+    </script>
+</body>
+
+</html>
